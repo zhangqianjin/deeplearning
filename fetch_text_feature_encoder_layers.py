@@ -287,7 +287,9 @@ def main():
             summed_last_4_layers = [torch.sum(torch.stack(layer)[-4:], 0) for layer in token_embeddings] # [number_of_tokens, 768]
             
             #Sentence Vectors
-            sentence_embedding = torch.mean(encoded_layers[11], 1)
+            #To get a single vector for our entire sentence we have multiple application-dependent strategieis, but a simple approach is to average the second to last hiden layer of each token producing a single 768 length vector.
+#           #sentence_embedding = torch.mean(encoded_layers[11], 1)
+            sentence_embedding = torch.mean(encoded_layers[-2], 1)
             print ("Our final sentence embedding vector of shape:", sentence_embedding[0].shape[0])
 
 
