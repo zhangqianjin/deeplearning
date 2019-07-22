@@ -14,22 +14,32 @@ def image_for_pytorch(img_file):
     imData = Variable(torch.unsqueeze(imData, dim=0), requires_grad=True)
     return imData.cuda()
 
-resnet152_model = models.resnet152(pretrained=True)
-modules = list(resnet152_model.children())[:-1]
-resnet152_conv2 = torch.nn.Sequential(*modules)
-resnet152_conv2.fc = lambda x: x
-resnet152_conv2.cuda()
+
+def fetch_model():
+    resnet50_model = models.resnet50(pretrained=True)
+    modules = list(resnet50_model.children())[:-1]
+    resnet50_conv2 = torch.nn.Sequential(*modules)
+    resnet50_conv2.fc = lambda x: x
+    resnet50_conv2.cuda()
+    return resnet50_conv2
+
+resnet50_conv2 = fetch_model()
 
 img_file = "test.jpg"
 inputs = image_for_pytorch(img_file)
 with torch.no_grad():
-    outputs = resnet152_conv2(inputs)
+    features = resnet50_conv2(inputs)
 
-outputs = outputs[:,:,0,0]
-print(outputs.data.shape)
+"""
+print(features.size())
+(1, 2048, 6, 2)
+"""
 data=outputs.data.view(1,-1)
-data_arr = data.cpu().numpy()[0]
-data_list =  list(data_arr)
+"""
+print(data.size())
+(1, 24576)
+"""
+data_list = data.tolist()
 data_str = map(str,data_list)
 data_result = ",".join(data_str)
 print "%s\t%s"%(0,data_result)
