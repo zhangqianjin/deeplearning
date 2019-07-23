@@ -9,7 +9,7 @@ import torchvision.transforms as transforms
 def image_for_pytorch(img_file):
     Data = Image.open(img_file).convert('RGB')
     transform = transforms.Compose([
-        transforms.Resize(256),transforms.ToTensor(),transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))])
+        transforms.Resize(224),transforms.ToTensor(),transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))])
     imData = transform(Data)
     imData = Variable(torch.unsqueeze(imData, dim=0), requires_grad=True)
     return imData.cuda()
@@ -19,6 +19,7 @@ def fetch_model():
     resnet50_model = models.resnet50(pretrained=True)
     modules = list(resnet50_model.children())[:-1]
     resnet50_conv2 = torch.nn.Sequential(*modules)
+    resnet152_conv2.avgpool = nn.AdaptiveAvgPool2d((1, 1)) #所有求平均
     resnet50_conv2.fc = lambda x: x
     resnet50_conv2.cuda()
     return resnet50_conv2
