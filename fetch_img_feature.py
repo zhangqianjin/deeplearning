@@ -17,7 +17,7 @@ def image_for_pytorch(img_file):
 
 def fetch_model():
     resnet50_model = models.resnet50(pretrained=True)
-    modules = list(resnet50_model.children())[:-1]
+    modules = list(resnet50_model.children())[:-2]
     resnet50_conv2 = torch.nn.Sequential(*modules)
     resnet50_conv2.avgpool = nn.AdaptiveAvgPool2d((1, 1)) #所有求平均
     resnet50_conv2.fc = lambda x: x
