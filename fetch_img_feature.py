@@ -33,7 +33,7 @@ with torch.no_grad():
 
 """
 print(features.size())
-(1, 2048, 6, 2)
+(1, 2048, 1, 1)
 """
 data=outputs.data.view(1,-1)
 """
