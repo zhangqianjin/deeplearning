@@ -19,7 +19,7 @@ def fetch_model():
     resnet50_model = models.resnet50(pretrained=True)
     modules = list(resnet50_model.children())[:-1]
     resnet50_conv2 = torch.nn.Sequential(*modules)
-    resnet152_conv2.avgpool = nn.AdaptiveAvgPool2d((1, 1)) #所有求平均
+    resnet50_conv2.avgpool = nn.AdaptiveAvgPool2d((1, 1)) #所有求平均
     resnet50_conv2.fc = lambda x: x
     resnet50_conv2.cuda()
     return resnet50_conv2
