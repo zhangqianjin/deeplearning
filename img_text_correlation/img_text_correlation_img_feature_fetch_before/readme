@@ -1,1 +1,6 @@
 图片特征提前抽取
+数据来自：https://challenger.ai/ 图片描述比赛项目
+img2id格式    img \t  index
+caption2id 格式   text \t index
+img2id和caption2id中的index相等说明text是图片的描述
+imgid2vec 是图片向量，格式 img \t feature
