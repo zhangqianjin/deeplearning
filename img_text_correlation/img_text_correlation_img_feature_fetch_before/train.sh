@@ -5,7 +5,7 @@ train_img_path=data/ai_challenger_caption_train_20170902/imgid2vec
 val_DATA_DIR=data/ai_challenger_caption_validation_20170910/
 val_img_path=data/ai_challenger_caption_validation_20170910/imgid2vec
 #val_img_path=data/ai_challenger_caption_validation_20170910/a
-BERT_MODEL=/ssd1/zhangqianjin/pytorch_test/bert-base-chinese_file
+BERT_MODEL=/pytorch_test/bert-base-chinese_file
 OUTPUT_DIR=output
 python3 train_net.py --train_data_dir ${train_DATA_DIR} \
                          --val_data_dir ${val_DATA_DIR} \
