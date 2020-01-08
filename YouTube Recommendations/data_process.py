@@ -45,5 +45,3 @@ if __name__ == '__main__':
         feature, label = batch
         print(feature)
         print(label.shape)
-
-#
