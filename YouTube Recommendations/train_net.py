@@ -174,3 +174,14 @@ if __name__ == '__main__':
         print("epoch=%d\tloss=%f" % (i_batch, loss.item()))
     for name, parameters in user_combined_features_model.named_parameters():
         print(name, ':', parameters)
+    #模型保持
+    torch.save(query_combined_features_model.state_dict(), "mov_combined_features_model_state_dict")
+    torch.save(user_combined_features_model.state_dict(), "user_combined_features_model_state_dict")
+    
+    user_model = user_combined_features([3, 16])
+    mov_model = query_combined_features([1, 16])
+    #模型加载
+    mov_model.load_state_dict(torch.load("mov_combined_features_model_state_dict"))
+    user_model.load_state_dict(torch.load("user_combined_features_model_state_dict"))
+    user_model.eval()
+    mov_model.eval()
