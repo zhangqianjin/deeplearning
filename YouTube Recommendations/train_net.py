@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from torch.utils.data import DataLoader, Dataset, TensorDataset, random_split
-from RS_data_process_pytorch import feature_label_DataSet
+from data_process import feature_label_DataSet
 
 
 class user_combined_features(nn.Module):
