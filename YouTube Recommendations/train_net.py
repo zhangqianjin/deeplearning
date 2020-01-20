@@ -205,7 +205,15 @@ if __name__ == '__main__':
                     middle_loss = sum(test_loss_list[-25:-10])/15
                     end_loss = sum(test_loss_list[-15:])/15
                     print("epoch=%d\tbatch=%d\tbegin_loss=%f\tmiddle_loss=%f\tend_loss=%f" % (epoch, i_batch,begin_loss,middle_loss,end_loss))
-
+                    if middle_loss > begin_loss and end_loss > begin_loss:
+                        flag = False
+                        break
+                 if best_auc < auc:
+                    best_auc = auc
+                    torch.save(LR_model.module.user_combined_features_model.state_dict(), "u_model_state_dict_%f"%best_auc)
+                    torch.save(LR_model.module.query_combined_features_model.state_dict(), "u_model_state_dict_%f"%best_auc)
+    
+    
     for name, parameters in user_combined_features_model.named_parameters():
         print(name, ':', parameters)
     #模型保持
@@ -217,5 +225,4 @@ if __name__ == '__main__':
     #模型加载
     mov_model.load_state_dict(torch.load("mov_combined_features_model_state_dict"))
     user_model.load_state_dict(torch.load("user_combined_features_model_state_dict"))
-    user_model.eval()
-    mov_model.eval()
+
