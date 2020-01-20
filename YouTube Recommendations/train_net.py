@@ -223,7 +223,7 @@ if __name__ == '__main__':
     
     user_model = user_combined_features([3, 16])
     mov_model = query_combined_features([1, 16])
-    #模型加载(CPU)
+    #模型加载(CPU环境需要增加map_location=torch.device('cpu'))
     mov_model.load_state_dict(torch.load("mov_combined_features_model_state_dict",map_location=torch.device('cpu')))
     user_model.load_state_dict(torch.load("user_combined_features_model_state_dict",map_location=torch.device('cpu')))
 
