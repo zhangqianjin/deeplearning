@@ -128,9 +128,30 @@ class LR_net(nn.Module):
         print("query_features:",query_features.shape)
         inner_product = torch.sum(user_features.mul(query_features),dim=1)
         print("inner_product.shape:",inner_product.shape)
-        # result = torch.sigmoid(inner_product)
-        return inner_product
-
+        result = torch.sigmoid(inner_product)
+        return result
+    
+def test_loss(LR_model, val_dataloader, criterion):
+    targets, predicts = list(), list()
+    loss_avg = 0
+    with torch.no_grad():
+        for step, sample_batched in enumerate(val_dataloader):
+            batch = tuple(t.cuda() for t in sample_batched)
+            X_data, Y_data = batch
+            out = LR_model(X_data)
+            out = out.squeeze()
+            loss = criterion(out, Y_data.float())
+            loss_avg += loss.mean().item()
+            targets.extend(Y_data.tolist())
+            y = out.squeeze()
+            predicts.extend(y.tolist())
+        loss_avg = loss_avg/(step+1)
+        try:
+            auc = roc_auc_score(targets, predicts)
+        except:
+           auc = -1
+    return loss_avg, auc
+    
 
 if __name__ == '__main__':
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -150,7 +171,7 @@ if __name__ == '__main__':
     query_combined_features_model = query_combined_features([1, 16])
     LR_model = LR_net(user_combined_features_model, query_combined_features_model)
 
-    criterion = nn.BCEWithLogitsLoss()
+    criterion = nn.BCELoss()
     optimizer = torch.optim.SGD([{'params': user_combined_features_model.parameters()},
                                  {'params': query_combined_features_model.parameters(), 'lr': 1e-4}], lr=0.01,
                                 momentum=0.9)
