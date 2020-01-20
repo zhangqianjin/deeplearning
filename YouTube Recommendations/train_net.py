@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 from torch.utils.data import DataLoader, Dataset, TensorDataset, random_split
 from data_process import feature_label_DataSet
-
+import math
 
 class user_combined_features(nn.Module):
     def __init__(self, user_role_dim_info, paragraph_in_dim=256, paragraph_out_dim=32):
@@ -24,7 +24,7 @@ class user_combined_features(nn.Module):
         self.init_weights()
 
     def init_weights(self):
-        initrange = 0.5
+        initrange = 1/math.sqrt(256)
         self.user_role_embedding.weight.data.uniform_(-initrange, initrange)
         self.user_role_fc.weight.data.uniform_(-initrange, initrange)
         self.user_role_fc.bias.data.zero_()
@@ -82,7 +82,7 @@ class query_combined_features(nn.Module):
         self.init_weights()
 
     def init_weights(self):
-        initrange = 0.5
+        initrange = 1/math.sqrt(256)
         self.query_hotrate_embedding.weight.data.uniform_(-initrange, initrange)
 
         self.query_fc .weight.data.uniform_(-initrange, initrange)
