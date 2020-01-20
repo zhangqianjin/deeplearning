@@ -134,6 +134,7 @@ class LR_net(nn.Module):
 def test_loss(LR_model, val_dataloader, criterion):
     targets, predicts = list(), list()
     loss_avg = 0
+    LR_model.eval()
     with torch.no_grad():
         for step, sample_batched in enumerate(val_dataloader):
             batch = tuple(t.cuda() for t in sample_batched)
