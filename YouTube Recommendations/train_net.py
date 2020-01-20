@@ -172,27 +172,40 @@ if __name__ == '__main__':
     LR_model = LR_net(user_combined_features_model, query_combined_features_model)
 
     criterion = nn.BCELoss()
-    optimizer = torch.optim.SGD([{'params': user_combined_features_model.parameters()},
-                                 {'params': query_combined_features_model.parameters(), 'lr': 1e-4}], lr=0.01,
-                                momentum=0.9)
+    LR_model=nn.DataParallel(LR_model,device_ids=[0,1]).cuda() # multi-GPU
+    optimizer = torch.optim.Adam(LR_model.parameters(), lr=0.001)
 
     # print(query_combined_features_model)
     best_auc = 0
+    test_loss_list = []
+    num = 0
+    flag = True
+    epoch = 0
+    while flag and epoch<10000:
+        epoch += 1
+        for i_batch, sample_batched in enumerate(train_dataloader):
+            num += 1
+            #batch = tuple(t for t in sample_batched)
+            batch = tuple(t.cuda() for t in sample_batched)
+            X_data, Y_data = batch
 
-    for i_batch, sample_batched in enumerate(train_dataloader):
-        batch = tuple(t for t in sample_batched)
-        # batch = tuple(t.cuda() for t in sample_batched)
-        feature, label = batch
-        X_data = feature
-        Y_data = label
-        print(feature.shape)
-        out = LR_model(X_data)
-        out = out.squeeze()
-        loss = criterion(out, Y_data.float())
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        print("epoch=%d\tloss=%f" % (i_batch, loss.item()))
+            out = LR_model(X_data)
+            out = out.squeeze()
+            loss = criterion(out, Y_data.float())
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            print("epoch=%d\tbatch=%d\tloss=%f" % (epoch, i_batch, loss.mean().item()))
+            if num % 30 == 0:
+                loss, auc = test_loss(LR_model, test_dataloader, criterion)
+                print("epoch=%d\ttestloss=%f\tauc=%f"%(epoch, loss, auc))
+                test_loss_list.append(loss)
+                if len(test_loss_list) > 40:
+                    begin_loss = sum(test_loss_list[-35:-20])/15
+                    middle_loss = sum(test_loss_list[-25:-10])/15
+                    end_loss = sum(test_loss_list[-15:])/15
+                    print("epoch=%d\tbatch=%d\tbegin_loss=%f\tmiddle_loss=%f\tend_loss=%f" % (epoch, i_batch,begin_loss,middle_loss,end_loss))
+
     for name, parameters in user_combined_features_model.named_parameters():
         print(name, ':', parameters)
     #模型保持
