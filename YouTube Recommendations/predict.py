@@ -105,22 +105,6 @@ class LR_net(nn.Module):
         result = torch.sigmoid(inner_product)
         return result
 
-
-def test_auc(LR_model, val_dataloader, criterion):
-    LR_model.eval()
-    targets, predicts = list(), list()
-    for step, sample_batched in enumerate(val_dataloader):
-        batch = tuple(t.cuda() for t in sample_batched)
-        feature, label = batch
-        targets.extend(label.tolist())
-        temp = len(set(targets))
-        if temp == 1:
-            return -1
-        out = LR_model(feature)
-        y = out.squeeze()
-        predicts.extend(y.tolist())
-    return roc_auc_score(targets, predicts)
-
 def plot_curve(y_test, y_pred):
     auc_score = roc_auc_score(y_test, y_pred)
     fpr, tpr, thresholds = roc_curve(y_test, y_pred)
@@ -173,11 +157,7 @@ def test_loss(LR_model, val_dataloader, criterion):
             auc = roc_auc_score(targets, predicts)
         except:
             auc = -1
-
-        print(targets)
-        print(predicts)
         plot_curve(targets, predicts)
-
     return loss_avg, auc
 
 
@@ -204,9 +184,5 @@ if __name__ == '__main__':
     # criterion = nn.BCEWithLogitsLoss()
     criterion = nn.BCELoss()
     # LR_model = nn.DataParallel(LR_model, device_ids=[0, 1, 2, 3]).cuda()  # multi-GPU
-    optimizer = torch.optim.Adam(LR_model.parameters(), lr=0.001)
-
-    best_auc = 0
-  
     loss, auc = test_loss(LR_model, test_dataloader, criterion)
     print("testloss=%f\tauc=%f" % (loss, auc))
