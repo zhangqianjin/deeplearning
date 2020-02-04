@@ -1,0 +1,3 @@
+build_index.py 是建立索引代码模块，采用流式数据建立索引
+
+query_index.py 查询索引，采用流式数据查询索引
