@@ -35,9 +35,7 @@ def multipro_block(data):
 
 def process():
     filename = sys.argv[2]
-    #model_file = sys.argv[1]
     data_stream = readfile(filename)
-    #model = Doc2Vec.load(model_file)
     cores = mul.cpu_count()
     cores_num = int(cores*0.5)
     with mul.Pool(cores_num) as pool:
