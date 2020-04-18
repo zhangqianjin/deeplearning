@@ -121,8 +121,8 @@ if __name__ == '__main__':
     filename = sys.argv[1]
     print("data file is %s"%filename)
     print("model init begin")
-    user_combined_features_model = user_combined_features(paragraph_in_dim=256571, paragraph_out_dim=128)
-    query_combined_features_model = query_combined_features(paragraph_in_dim=4662, paragraph_out_dim=128)
+    user_combined_features_model = user_combined_features(paragraph_in_dim=200000, paragraph_out_dim=128)
+    query_combined_features_model = query_combined_features(paragraph_in_dim=30000, paragraph_out_dim=128)
     #user_combined_features_model.load_state_dict(torch.load("model/user_model_state_dict"))
     #query_combined_features_model.load_state_dict(torch.load("model/query_model_state_dict")) 
     LR_model = LR_net(user_combined_features_model, query_combined_features_model)
