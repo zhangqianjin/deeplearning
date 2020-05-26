@@ -1,3 +1,18 @@
 1.基于rdd的反射机制转成DataFrame
+text file is :
+a,1,2
+b,1,3
+c,2,5
 
+from pyspark.sql import SparkSession
+builder = SparkSession.builder.appName(app_name)
+builder.master(master)
+spark = builder.enableHiveSupport().getOrCreate()
 sc = spark.sparkContext
+spark = SparkSession(sc)
+
+df = spark.read.text(src_file)
+rdd = df.rdd.map(lambda x:x[0].split(",")).map(lambda x:(x[0],int(x[1])+int(x[2])))
+df1 = rdd.toDF()
+df2 = rdd.toDF(["first","second"])
+
