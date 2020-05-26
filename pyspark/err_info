@@ -3,3 +3,9 @@
 : java.lang.IllegalArgumentException: Required executor memory (40960), overhead (512 MB), and PySpark memory (0 MB) is above the max threshold (32768 MB) of this cluster! Please check the values of 'yarn.scheduler.maximum-allocation-mb' and/or 'yarn.nodemanager.resource.memory-mb'.
 
 解决方法：把--executor-memory 减小
+
+
+2.YarnScheduler: Lost executor 123 on *: Container marked as failed: container_* on host: * Exit status: -100. Diagnostics: Container released on a *lost* node.
+
+解决方法:--conf spark.yarn.executor.memoryOverhead 调大
+
