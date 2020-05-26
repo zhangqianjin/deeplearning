@@ -10,3 +10,4 @@ mac:如果设置了-javaagent: 报错
 cd ~/Library/; 
 2.1 cd ~/Library/Caches; rm -r GoLand2019.3
 2.2 cd ~/Library/Preferences; rm -r GoLand2019.3
+3 重新安装
