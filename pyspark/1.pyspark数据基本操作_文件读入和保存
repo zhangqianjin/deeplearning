@@ -10,6 +10,7 @@ builder = SparkSession.builder.appName(app_name)
 builder.master(master)
 spark = builder.enableHiveSupport().getOrCreate()
 sc = spark.sparkContext
+spark = SparkSession(sc)
 
 src_file = "hdfs://" or "file:///"
 dst_file = "hdfs://" or "file:///"
@@ -36,6 +37,7 @@ builder = SparkSession.builder.appName(app_name)
 builder.master(master)
 spark = builder.enableHiveSupport().getOrCreate()
 sc = spark.sparkContext
+spark = SparkSession(sc)
 
 src_file = "hdfs://" or "file:///"
 dst_file = "hdfs://" or "file:///"
