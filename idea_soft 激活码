@@ -2,3 +2,11 @@ https://www.cnblogs.com/mrxiab/p/12176336.html
 https://www.cnblogs.com/mrxiab/p/12176336.html
 https://www.cnblogs.com/mrxiab/p/12176336.html
 https://www.cnblogs.com/mrxiab/p/12176336.html
+
+mac:如果设置了-javaagent: 报错
+没法启动 Start Failed
+1.卸载软件
+2.
+cd ~/Library/; 
+2.1 cd ~/Library/Caches; rm -r GoLand2019.3
+2.2 cd ~/Library/Preferences; rm -r GoLand2019.3
