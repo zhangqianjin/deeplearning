@@ -35,4 +35,4 @@ df2 = spark.createDateFrame(rdd1)
 from pyspark.sql.types import *
 schema = StructType([StructField('first', StringType()), StructField('second', IntType())])
 df3 = spark.createDataFrame(rdd, schema)
-df4 = spark.read.schema(schema).load(path)
+df4 = spark.read.schema(schema).load(path) #parquet格式文件
