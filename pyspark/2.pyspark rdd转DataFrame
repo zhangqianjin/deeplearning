@@ -36,3 +36,11 @@ from pyspark.sql.types import *
 schema = StructType([StructField('first', StringType()), StructField('second', IntType())])
 df3 = spark.createDataFrame(rdd, schema)
 df4 = spark.read.schema(schema).load(path) #parquet格式文件
+
+
+3写入数据库
+url = "jdbc:mysql://"
+table = "bac"
+mode = "overwrite"
+properties = {'user':'abc', 'password':'123'}
+df3.write.jdbc(url,table,model,properties)
