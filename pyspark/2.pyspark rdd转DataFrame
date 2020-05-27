@@ -39,8 +39,9 @@ df4 = spark.read.schema(schema).load(path) #parquet格式文件
 
 
 3写入数据库
-url = "jdbc:mysql://"
+url = "jdbc:mysql://host:port/"
 table = "bac"
 mode = "overwrite"
 properties = {'user':'abc', 'password':'123'}
 df3.write.jdbc(url,table,model,properties)
+
