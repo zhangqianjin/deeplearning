@@ -1,0 +1,15 @@
+如果想在pyspark计算过程中调用第三方模块，比如redis
+
+1.在本地安装redis.pip install redis
+2.cp -r ....../site-packages/redis redis/
+
+redis目录中包括redis目录，下面才是文件，否则unzip的时候找不到模块
+
+3.压缩为*.zip包
+import shutil
+dir_name = "redis"
+output_filename = "./redis"
+shutil.make_archive(output_filename, 'zip', dir_name)
+
+4.把*.zip文件路径加入到pyspark中
+spark.sparkContext.addPyFile("./redis.zip")
