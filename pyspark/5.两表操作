@@ -1,0 +1,45 @@
+table a
+
+uid  likelist
+1  a,b,c
+2  b,c,d
+
+
+table b
+
+like  name
+a     liu
+b     zhang
+c     guo
+d     xu
+
+
+from __future__ import print_function
+from pyspark.sql import SparkSession
+import time
+import datetime
+import os
+import sys
+import json
+import pyspark.sql.functions as F
+from pyspark.sql.functions import col, split, explode, concat, concat_ws,collect_list,udf,Row
+from pyspark.sql.types import StringType, ArrayType
+
+builder = SparkSession.builder.appName(app_name)
+spark = builder.enableHiveSupport().getOrCreate()
+sc = spark.sparkContext
+spark = SparkSession(sc)
+
+table_a_df = spark.read.parquet(talbe_a_file)
+table_b_df = spark.read.parquet(talbe_b_file)
+
+table_a_df1 = table_a_df.repartition(2 * total_cores)
+
+table_a_df2 =  table_a_df1.withColumn("like",explode(split(table_a_df1['likelist'], ",")))
+table_a_df3 = table_a_df2.select("uid",'like')
+merge_df = table_a_df3.join(table_b_df, on="like", how="inner").groupBy('uid').agg(collect_list("name"))
+
+result_df = merge_df.rdd.map(lambda x:(x[0], fetch_name(x[1]))).toDF(["uid","name"])
+result_df.write.parquet(save_file)
+
+#fetch_name is function
