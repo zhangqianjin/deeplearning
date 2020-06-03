@@ -1,0 +1,2 @@
+使用 redis 的list 解决了 string 线上解析影响性能；zadd 离线导入太慢的问题
+
