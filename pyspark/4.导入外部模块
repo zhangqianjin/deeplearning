@@ -2,6 +2,10 @@
 
 1.在本地安装redis.pip install redis
 2.cp -r ....../site-packages/redis redis/
+查看 site-packages位置
+from distutils.sysconfig import get_python_lib
+print(get_python_lib())
+
 
 redis目录中包括redis目录，下面才是文件，否则unzip的时候找不到模块
 
