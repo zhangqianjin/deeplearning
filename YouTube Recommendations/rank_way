@@ -1,0 +1,1 @@
+rank_score = ctr_predict_score ^ alpha * (finish_predict_score*duration) ^beta * (dianzan_predict_score)^gamma
