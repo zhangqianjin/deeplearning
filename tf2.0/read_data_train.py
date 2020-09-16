@@ -34,6 +34,9 @@ vec_size = 128
 output_size = 10
 num_epochs = 10
 batch_size = 16
+gpus = tf.config.experimental.list_physical_devices('GPU')
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
 mirrored_strategy = tf.distribute.MirroredStrategy()
 with mirrored_strategy.scope():
     model = myModel(vocab_size, output_size, vec_size)
