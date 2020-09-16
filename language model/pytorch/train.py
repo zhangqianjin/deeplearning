@@ -14,8 +14,8 @@ import torch.nn.functional as F
 #from encoding.parallel import DataParallelModel,DataParallelCriterion
 from parallel import DataParallelModel, DataParallelCriterion
 
-class DM(nn.Module):
-    def __init__(self, vocab_size=10000, embedding_size=64, output_size = 2000000):
+class lm(nn.Module):
+    def __init__(self, vocab_size=100, embedding_size=16, output_size = 10000):
         super(DM, self).__init__()
         self.vocab_size = vocab_size
         self.embedding_size = embedding_size
@@ -41,7 +41,7 @@ class DM(nn.Module):
 
 
 if __name__ == '__main__':
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5,6,7"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3,4,5"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     n_gpu = torch.cuda.device_count()
     vocab_file = sys.argv[1]
@@ -52,11 +52,11 @@ if __name__ == '__main__':
     num_epochs = 20
     batch_size = 1024
     print("begin set embedding")
-    model = DM(vocab_size, vec_size, output_size).cuda()
-    #model=nn.DataParallel(model, device_ids=[0,1,2,3,4,5,6,7]).cuda()
+    model = lm(vocab_size, vec_size, output_size).cuda()
+    #model=nn.DataParallel(model, device_ids=[0,1,2,3,4,5]).cuda()
     #model =DataParallelModel(model)
     #optimizer = Adam(params=model.parameters(), lr=0.01)
-    #optimizer = SGD(params=model.parameters(), lr=0.001, momentum=0.95)
+    #optimizer = SGD(params=model.parameters(), lr=0.001, momentum=0.99)
     optimizer = Adadelta(params=model.parameters(), lr=1)
     model = nn.DataParallel(model)
     print("model init end and begin train")
