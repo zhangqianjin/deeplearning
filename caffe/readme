@@ -9,6 +9,12 @@ make runtest
 centos下
 /bin/ld: cannot find -lcblas
 /bin/ld: cannot find -latlas
+
+
 因为在centos里面没有cblas,atlas，有satlas和 tatlas
 将 LIBRARIES += cblas atlas
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/atlas
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/lib64/atlas
+
 改成： LIBRARIES += satlas tatlas
