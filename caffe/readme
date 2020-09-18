@@ -1,0 +1,7 @@
+
+cp Makefile.config.example Makefile.config
+如果是cpu版本，在Makefile.config开头增加CXXFLAGS += -DCPU_ONLY
+# Adjust Makefile.config (for example, if using Anaconda Python, or if cuDNN is desired)
+make all
+make test
+make runtest
