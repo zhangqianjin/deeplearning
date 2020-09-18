@@ -5,3 +5,10 @@ cp Makefile.config.example Makefile.config
 make all
 make test
 make runtest
+
+centos下
+/bin/ld: cannot find -lcblas
+/bin/ld: cannot find -latlas
+因为在centos里面没有cblas,atlas，有satlas和 tatlas
+将 LIBRARIES += cblas atlas
+改成： LIBRARIES += satlas tatlas
