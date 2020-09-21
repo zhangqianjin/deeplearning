@@ -1,0 +1,5 @@
+拉pytorch代码
+从https://gitee.com/mirrors/pytorch拉代码， （https://github.com/pytorch/pytorch）速度太慢了
+git clone --recursive  https://gitee.com/mirrors/pytorch.git
+
+git submodule update --init
