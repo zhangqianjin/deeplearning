@@ -1,3 +1,42 @@
+shell script
+
+#!/bin/python
+
+source ~/.bash_profile
+source /etc/profile
+
+export  HADOOP_USER_NAME=hadoop_name
+
+queue=""
+
+hadoop fs -get hdfs:***/tool/sample_python.tar.gz
+tar -zxvf sample_python.tar.gz
+
+begin=`date +"%Y-%m-%d %H:%M:%S"`
+#echo "$begin start $1"
+
+yesterday=$(date -d "2 day ago" +%Y-%m-%d)
+ago_8=$(date -d "9 day ago" +%Y-%m-%d)
+
+
+script_file=$1
+#script_file="fetch_2_hive.py"
+spark-submit    --master yarn \
+                --queue $mr_online \
+                --conf spark.yarn.dist.archives=hdfs:***/tool/sample_python.tar.gz#dist \
+                --conf spark.pyspark.python=./dist/sample_python/bin/python3.6 \
+                --conf spark.pyspark.driver.python=./sample_python/bin/python3.6 \
+                --conf spark.yarn.executor.memoryOverhead=4G \
+                --conf spark.sql.shuffle.partitions=2048 \
+                --executor-memory 10G  \
+                --driver-memory 1G \
+                --num-executors 256 \
+                --executor-cores 2 ${script_file} 
+
+
+
+python script
+
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from pyspark.sql import SparkSession
