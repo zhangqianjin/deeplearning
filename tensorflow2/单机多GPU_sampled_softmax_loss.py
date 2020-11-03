@@ -30,7 +30,8 @@ if __name__ == '__main__':
         optimizer = tf.keras.optimizers.SGD()
         model = MyModel()
         W = tf.Variable(tf.random.normal([10, 128],stddev=1, seed=1))
-        b = tf.Variable(tf.zeros([10]))
+        #b = tf.Variable(tf.zeros([10]))
+        b = tf.constant(tf.zeros([10]))
     mnist = tf.keras.datasets.mnist
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
     x_train, x_test = x_train / 255.0, x_test / 255.0
