@@ -23,6 +23,8 @@ class MyModel(Model):
 
 if __name__ == '__main__':
     gpus = tf.config.experimental.list_physical_devices('GPU')
+    for gpu in gpus:
+        tf.config.experimental.set_memory_growth(gpu, True)
     mirrored_strategy = tf.distribute.MirroredStrategy()
     with mirrored_strategy.scope():
         optimizer = tf.keras.optimizers.SGD()
