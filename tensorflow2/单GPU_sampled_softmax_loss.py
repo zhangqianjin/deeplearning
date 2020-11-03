@@ -35,7 +35,8 @@ class MyModel(Model):
 mirrored_strategy = tf.distribute.MirroredStrategy()
 
 W = tf.Variable(tf.random.normal([10, 128],stddev=1, seed=1))
-b = tf.Variable(tf.zeros([10]))
+#b = tf.Variable(tf.zeros([10]))
+b = tf.constant(tf.zeros([10]))
 with mirrored_strategy.scope(): 
     model = MyModel()
     
