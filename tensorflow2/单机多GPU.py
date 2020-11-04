@@ -37,8 +37,8 @@ if __name__ == '__main__':
     x_test = x_test[..., tf.newaxis]
 
     GLOBAL_BATCH_SIZE = 32 
-    train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(10000).batch(GLOBAL_BATCH_SIZE)
-    test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(GLOBAL_BATCH_SIZE)
+    train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).shuffle(10000).batch(GLOBAL_BATCH_SIZE).prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+    test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(GLOBAL_BATCH_SIZE).prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
     train_dist_dataset = mirrored_strategy.experimental_distribute_dataset(train_ds)
     test_dist_dataset = mirrored_strategy.experimental_distribute_dataset(test_ds)
     with mirrored_strategy.scope():
