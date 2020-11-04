@@ -46,7 +46,7 @@ def input_fn(data_file, batch_size, num_epoch = None):
     dataset = dataset.map(lambda string : tf.compat.v1.string_to_number(string,tf.float32))
     dataset = dataset.map(lambda x: (x[:-1], x[-1]))
     #dataset = dataset.repeat(num_epoch)
-    dataset = dataset.shuffle(1024).batch(batch_size)
+    dataset = dataset.shuffle(1024).batch(batch_size).prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
     return dataset
 
 if __name__ == '__main__':
