@@ -13,8 +13,8 @@ x_train = x_train[..., tf.newaxis]
 x_test = x_test[..., tf.newaxis]
 
 train_ds = tf.data.Dataset.from_tensor_slices(
-    (x_train, y_train)).shuffle(10000).batch(128)
-test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32)
+    (x_train, y_train)).shuffle(10000).batch(128).prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32).prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
 
 class MyModel(Model):
   def __init__(self):
