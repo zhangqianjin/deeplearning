@@ -89,7 +89,7 @@ if __name__ == '__main__':
         def train_step(inputs):
             images, labels = inputs
 
-            with tf.GradientTape() as tape:
+            with tf.GradientTape(persistent=True) as tape:
                 user_emb = model(images, training=True)
                 loss = tf.reduce_mean(tf.nn.sampled_softmax_loss(W, b, tf.reshape(labels,[-1,1]), user_emb, num_sampled=2,num_classes=10))
                 #loss = tf.reduce_mean(tf.nn.nce_loss(W, b, tf.reshape(labels,[-1,1]), user_emb, num_sampled=5,num_classes=10, remove_accidental_hits=True))
@@ -99,6 +99,8 @@ if __name__ == '__main__':
             predictions = tf.nn.softmax(logits)
             gradients = tape.gradient(loss, model.trainable_variables)
             optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+            gradients = tape.gradient(loss, [W])
+            optimizer.apply_gradients(zip(gradients,[W]))
 
             train_accuracy.update_state(labels, predictions)
             return loss 
