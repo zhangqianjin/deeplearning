@@ -42,11 +42,11 @@ class MyModel(Model):
 
 def input_fn(data_file, batch_size, num_epoch = None):
     dataset = (tf.data.TextLineDataset(data_file))
-    dataset = dataset.map(lambda string: tf.strings.split(string, sep=","))
-    dataset = dataset.map(lambda string : tf.compat.v1.string_to_number(string,tf.float32))
-    dataset = dataset.map(lambda x: (x[:-1], x[-1]))
+    dataset = dataset.map(lambda string: tf.strings.split(string, sep=","), num_parallel_calls=8)
+    dataset = dataset.map(lambda string : tf.compat.v1.string_to_number(string,tf.float32), num_parallel_calls=8)
+    dataset = dataset.map(lambda x: (x[:-1], x[-1]), num_parallel_calls=8)
     #dataset = dataset.repeat(num_epoch)
-    dataset = dataset.shuffle(1024).batch(batch_size).prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+    dataset = dataset.shuffle(1024).batch(batch_size).prefetch(buffer_size=batch_size)
     return dataset
 
 if __name__ == '__main__':
@@ -121,12 +121,12 @@ if __name__ == '__main__':
     with mirrored_strategy.scope():
         @tf.function
         def distributed_train_step(dataset_inputs):
-            per_replica_losses = mirrored_strategy.experimental_run_v2(train_step,args=(dataset_inputs,))
+            per_replica_losses = mirrored_strategy.run(train_step,args=(dataset_inputs,))
             return mirrored_strategy.reduce(tf.distribute.ReduceOp.SUM, per_replica_losses,axis=None)
  
         @tf.function
         def distributed_test_step(dataset_inputs):
-            mirrored_strategy.experimental_run_v2(test_step, args=(dataset_inputs,))
+            mirrored_strategy.run(test_step, args=(dataset_inputs,))
 
         for epoch in range(20):
             total_loss = 0.0
