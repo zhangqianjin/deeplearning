@@ -46,7 +46,7 @@ if __name__ == '__main__':
     GLOBAL_BATCH_SIZE = 1024*8
     num_workers = tf.data.experimental.AUTOTUNE 
     with mirrored_strategy.scope():
-        optimizer = tf.keras.optimizers.SGD()
+        optimizer = tf.keras.optimizers.Adam(learning_rate=0.01, beta_1=0.9, beta_2=0.999, epsilon=1e-07)
         model = myModel(vocab_size, output_size, vec_size)
         W = tf.Variable(tf.random.normal([output_size, vec_size],stddev=1, seed=1))
         b = tf.constant(tf.zeros([output_size]))
