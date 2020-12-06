@@ -21,18 +21,14 @@ class Model(keras.Model):
         #self.mid_embeddings_var = tf.keras.layers.Embedding(input_dim=n_mid, output_dim=embedding_dim)
         self.mid_embeddings_var = tf.Variable(tf.random.uniform(shape=[n_mid,embedding_dim], minval=-1/math.sqrt(self.embedding_dim), maxval=1/math.sqrt(self.embedding_dim)))
         self.mid_embeddings_bias = tf.Variable(tf.zeros([n_mid]), trainable=False)
-        self.user_emb = tf.keras.layers.Dense(self.hidden_size, activation=None) 
-        self.gru = tf.keras.layers.GRU(hidden_size, return_sequences=True, return_state=True)
-
+        self.gru = tf.keras.layers.GRU(self.hidden_size, return_sequences=True, return_state=True)
+    
     def call(self, item_id, hist_item, hist_mask):
         mid_batch_embedded = tf.nn.embedding_lookup(self.mid_embeddings_var, item_id)
         mid_his_batch_embedded = tf.nn.embedding_lookup(self.mid_embeddings_var, hist_item)
 
         item_his_eb = mid_his_batch_embedded * tf.reshape(hist_mask, (-1, self.seq_len, 1))
         #item_list_emb = tf.reshape(item_his_eb, [-1, self.seq_len, self.embedding_dim])
-        #masks = tf.concat([tf.expand_dims(hist_mask, -1) for _ in range(self.embedding_dim)], axis=-1)
-
-        #mask_length = tf.cast(tf.reduce_sum(hist_mask, -1), dtype=tf.int32)
         whole_sequence_output, final_state = self.gru(item_his_eb) 
         
         user_emb = final_state
@@ -50,7 +46,7 @@ class Model(keras.Model):
         item_his_eb = mid_his_batch_embedded * tf.reshape(hist_mask, (-1, self.seq_len, 1))
         item_list_emb = tf.reshape(item_his_eb, [-1, self.seq_len, self.embedding_dim])
         masks = tf.concat([tf.expand_dims(hist_mask, -1) for _ in range(self.embedding_dim)], axis=-1)
+        whole_sequence_output, final_state = self.gru(item_his_eb)
 
-        item_his_emb_mean = tf.reduce_sum(item_his_eb, 1) / (tf.reduce_sum(tf.cast(masks, dtype=tf.float32), 1) + 1e-9)
-        user_emb = self.user_emb(item_his_emb_mean)
+        user_emb = final_state
         return user_emb
