@@ -29,7 +29,7 @@ class Model(keras.Model):
 
         item_his_eb = mid_his_batch_embedded * tf.reshape(hist_mask, (-1, self.seq_len, 1))
         #item_list_emb = tf.reshape(item_his_eb, [-1, self.seq_len, self.embedding_dim])
-        whole_sequence_output, final_state = self.gru(item_his_eb) 
+        whole_sequence_output, final_state = self.gru(item_his_eb, mask=hist_mask) 
         
         user_emb = final_state
         loss = tf.reduce_mean(tf.nn.sampled_softmax_loss(self.mid_embeddings_var, self.mid_embeddings_bias,
