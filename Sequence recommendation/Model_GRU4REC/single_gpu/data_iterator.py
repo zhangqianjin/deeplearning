@@ -75,11 +75,7 @@ class DataIterator:
                 item_id_list.append(item_list[k])
             else:
                 k = int(len(item_list) * 0.8)
-                test_num = item_list_len - k
-                if test_num >= self.maxlen:
-                    item_id_list.append(item_list[k:k + self.maxlen])
-                else:
-                    item_id_list.append(item_list[k:] + [0] * (self.maxlen - test_num))
+                item_id_list.append(item_list[k:])
             if k >= self.maxlen:
                 hist_item_list.append(item_list[k-self.maxlen: k])
                 hist_mask_list.append([1.0] * self.maxlen)
