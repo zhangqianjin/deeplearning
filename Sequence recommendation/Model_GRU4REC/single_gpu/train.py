@@ -32,9 +32,12 @@ parser.add_argument('--topN', type=int, default=50)
 
 best_metric = 0
 
-def prepare_data(src, target):
+def prepare_data(src, target, flag="train"):
     nick_id, item_id = src
     hist_item, hist_mask = target
+    
+    if flag == 'eval':
+        item_id = tf.keras.preprocessing.sequence.pad_sequences(item_id, padding="post")
     
     nick_id = tf.convert_to_tensor(nick_id)
     item_id = tf.convert_to_tensor(item_id)
@@ -81,7 +84,7 @@ def evaluate_full(test_data, model, model_path, batch_size, item_cate_map, save=
     total_map = 0.0
     total_diversity = 0.0
     for src, tgt in test_data:
-        nick_id, item_id, hist_item, hist_mask = prepare_data(src, tgt)
+        nick_id, item_id, hist_item, hist_mask = prepare_data(src, tgt, 'eval')
         if hist_mask.shape[0] < 1:
             continue
         user_embs = model.output_user(hist_item, hist_mask)
